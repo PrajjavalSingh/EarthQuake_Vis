@@ -50,8 +50,6 @@ while lat is not None:
     latitudes.append(lat[0])
     lat = cursor.fetchone()
 
-#latitudes = [list(lat) for lat in latitudes]
-
 query = 'SELECT longitude FROM EarthQuake_Data_Table'
 cursor.execute( query )
 lon = cursor.fetchone()
