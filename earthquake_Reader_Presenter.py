@@ -25,10 +25,8 @@ class DataFetcherAndPresenter:
 
         except requests.exceptions.RequestException as e:
             print( "Error:", e )
-        except StopIteration:
-            print( "The CSV file appears to be empty." )
-        except csv.Error as e:
-            print( "CSV Error:", e )
+        except IOError as e:
+            print( "Exception from creating csv : ", e )
         except Exception as e:
             print( "An unexpected error occurred:", e )
 
