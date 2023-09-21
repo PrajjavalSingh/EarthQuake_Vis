@@ -90,8 +90,8 @@ if nr_args < 2:
     root.withdraw()
     messagebox.showerror("Insufficient number of arguments, expected two arguments")
 else:
-    startdate = sys.argv[0]
-    enddate = sys.argv[1]
+    startdate = sys.argv[1]
+    enddate = sys.argv[2]
     earthquakedata = DataFetcherAndPresenter(startdate,enddate)
     earthquakedata.fetchdata()
     coordinates = earthquakedata.getLatLongCoordinates()
