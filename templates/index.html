@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>EarthQuake : Parameter Input</title>
+    </head>
+</html>
+<body>
+    <h1>Date Range Entry Point</h1>
+    <form action="/earthquake_data_gatherer" method="post">
+        <label for="start_date">Start Date</label>
+        <input type="date" name="start_date" id="start_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
+        <label for="end_date">End Date</label>
+        <input type="date" name="end_date" id="end_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>

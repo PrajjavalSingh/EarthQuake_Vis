@@ -1,12 +1,15 @@
-import csv
+import sys
 import requests
 import sqlite3
 from io import StringIO
 import pandas as pd
+import tkinter
+from tkinter import messagebox
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from shapely.geometry import Point
+
 
 #starttime and endtime format yyyy-mm-dd
 class DataFetcherAndPresenter:
@@ -81,7 +84,15 @@ class DataFetcherAndPresenter:
         # Show the plot
         plt.show()
 
-earthquakedata = DataFetcherAndPresenter("2023-09-09","2023-09-13")
-earthquakedata.fetchdata()
-coordinates = earthquakedata.getLatLongCoordinates()
-earthquakedata.displayOnWorldMap( coordinates )
+nr_args = len(sys.argv)
+if nr_args < 2:
+    root = tkinter.Tk()
+    root.withdraw()
+    messagebox.showerror("Insufficient number of arguments, expected two arguments")
+else:
+    startdate = sys.argv[0]
+    enddate = sys.argv[1]
+    earthquakedata = DataFetcherAndPresenter(startdate,enddate)
+    earthquakedata.fetchdata()
+    coordinates = earthquakedata.getLatLongCoordinates()
+    earthquakedata.displayOnWorldMap( coordinates )
