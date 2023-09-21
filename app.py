@@ -19,6 +19,5 @@ def earthquake_data_gatherer():
         print( "Subprocess error : ", e )
         return
 
-
 if  __name__ == '__main__':
     app.run()
