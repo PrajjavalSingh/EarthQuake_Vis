@@ -88,7 +88,7 @@ nr_args = len(sys.argv)
 if nr_args < 2:
     root = tkinter.Tk()
     root.withdraw()
-    messagebox.showerror("Insufficient number of arguments, expected two arguments")
+    messagebox.showerror("Error","Insufficient number of arguments, expected start and end date")
 else:
     startdate = sys.argv[1]
     enddate = sys.argv[2]
