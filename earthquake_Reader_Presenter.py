@@ -13,18 +13,22 @@ from shapely.geometry import Point
 
 #starttime and endtime format yyyy-mm-dd
 class DataFetcherAndPresenter:
-    def __init__(self, starttime, endtime ):
+    def __init__(self, starttime, endtime, minmag, maxmag ):
         self.starttime = starttime
         self.endtime = endtime
+        self.minmag= minmag
+        self.maxmag = maxmag
 
     def fetchdata(self):
-        URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=csv&starttime="+self.starttime+"&endtime="+self.endtime
+        URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=csv&starttime="+self.starttime+"&endtime="+self.endtime+"&minmagnitude="+self.minmag+"&maxmagnitude="+self.maxmag
         try:
             earthquake_data_resp = requests.get( URL )
             earthquake_data_resp.raise_for_status()
 
             earthquake_csv = StringIO( earthquake_data_resp.text )
             df = pd.read_csv( earthquake_csv )
+            if df.empty:
+                messagebox.showinfo("Information","There is no data to fetch")
 
         except requests.exceptions.RequestException as e:
             print( "Error:", e )
@@ -92,7 +96,9 @@ if nr_args < 2:
 else:
     startdate = sys.argv[1]
     enddate = sys.argv[2]
-    earthquakedata = DataFetcherAndPresenter(startdate,enddate)
+    minmag = sys.argv[3]
+    maxmag = sys.argv[4]
+    earthquakedata = DataFetcherAndPresenter(startdate,enddate,minmag,maxmag)
     earthquakedata.fetchdata()
     coordinates = earthquakedata.getLatLongCoordinates()
     earthquakedata.displayOnWorldMap( coordinates )

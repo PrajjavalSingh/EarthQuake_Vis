@@ -11,6 +11,26 @@
         <input type="date" name="start_date" id="start_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
         <label for="end_date">End Date</label>
         <input type="date" name="end_date" id="end_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
+        <label for="min_mag">Minimum Magnitude</label>
+        <input type="number" name="min_mag" id="min_mag" pattern="0-9" min="1" max="10" value="1" >
+        <label for="max_mag">Maximum Magnitude</label>
+        <input type="number" name="max_mag" id="max_mag" pattern="0-9" min="1" max="10" value="10">
         <input type="submit" value="Submit">
     </form>
 </body>
+
+<script>
+    var min_mag = document.getElementById("min_mag");
+    var max_mag = document.getElementById("max_mag");
+    min_mag.addEventListener("input",function()
+    {
+        if ( parseInt(max_mag.value) < parseInt(this.value) )
+            max_mag.value = this.value
+    });
+
+    max_mag.addEventListener("input",function()
+    {
+        if ( parseInt(min_mag.value) > parseInt(this.value) )
+            min_mag.value = this.value
+    });
+</script>
