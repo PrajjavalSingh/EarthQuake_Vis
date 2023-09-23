@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <title>EarthQuake : Parameter Input</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 </html>
 <body>
@@ -15,7 +16,25 @@
         <input type="number" name="min_mag" id="min_mag" pattern="0-9" min="1" max="10" value="1" >
         <label for="max_mag">Maximum Magnitude</label>
         <input type="number" name="max_mag" id="max_mag" pattern="0-9" min="1" max="10" value="10">
-        <input type="submit" value="Submit">
+        <button id="submit" value="Submit">
+        <div id="result"></div>
+        <script>
+            $(document).ready(function() 
+            {
+                $("#run-script").click(function() 
+                {
+                    $.ajax
+                    ({
+                        type: "POST",
+                        url: "/run_script",
+                        success: function(response) 
+                        {
+                            $("#result").html(response.result);
+                        }
+                    });
+                });
+            });
+        </script>
     </form>
 </body>
 

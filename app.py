@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import subprocess
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ def earthquake_data_gatherer():
     try:
         result = subprocess.run( command, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, text=True )
-        return result
+        return jsonify(result=result)
     except subprocess.CalledProcessError as e:
         print( "Subprocess error : ", e )
         return
