@@ -1,4 +1,14 @@
 <!DOCTYPE HTML>
+<style>
+    .myDiv {
+        border: 1px outset black;
+        text-align: left;
+        max-width: 500px;
+        padding: 5px;
+        text-align: center;
+    }
+</style>
+
 <html lang="en">
     <head>
         <title>EarthQuake : Parameter Input</title>
@@ -6,17 +16,23 @@
     </head>
 </html>
 <body>
-    <h1>Date Range Entry Point</h1>
+    <h1>EarthQuake Data : Parameter Input</h1>
     <form action="/earthquake_data_gatherer" method="post">
-        <label for="start_date">Start Date</label>
-        <input type="date" name="start_date" id="start_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
-        <label for="end_date">End Date</label>
-        <input type="date" name="end_date" id="end_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
-        <label for="min_mag">Minimum Magnitude</label>
-        <input type="number" name="min_mag" id="min_mag" pattern="0-9" min="1" max="10" value="1" >
-        <label for="max_mag">Maximum Magnitude</label>
-        <input type="number" name="max_mag" id="max_mag" pattern="0-9" min="1" max="10" value="10">
-        <button id="submit" value="Submit">
+        <div class="myDiv">
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" id="start_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
+            <label for="end_date">End Date</label>
+            <input type="date" name="end_date" id="end_date" pattern="\d{4}-\d{2}-\d{2}" required><br><br>
+        </div>
+        <div class="myDiv">
+            <label for="min_mag">Minimum Magnitude</label>
+            <input type="number" name="min_mag" id="min_mag" pattern="0-9" min="1" max="10" value="1" >
+            <label for="max_mag">Maximum Magnitude</label>
+            <input type="number" name="max_mag" id="max_mag" pattern="0-9" min="1" max="10" value="10">
+        </div>
+        <div class="myDiv">
+            <input type ="submit" id="submit" value="Submit">
+        </div>
         <div id="result"></div>
         <script>
             $(document).ready(function() 
