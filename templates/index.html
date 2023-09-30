@@ -1,12 +1,28 @@
 <!DOCTYPE HTML>
 <style>
-    .myDiv {
+    .myDiv 
+    {
         border: 1px outset black;
         text-align: left;
         max-width: 500px;
         padding: 5px;
         text-align: center;
     }
+
+    .button 
+    {
+        background-color: black;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    
 </style>
 
 <html lang="en">
@@ -31,7 +47,7 @@
             <input type="number" name="max_mag" id="max_mag" pattern="0-9" min="1" max="10" value="10">
         </div>
         <div class="myDiv">
-            <input type ="submit" id="submit" value="Submit">
+            <button class ="button" id="submit">Submit</button>
         </div>
         <div id="result"></div>
         <script>
@@ -51,7 +67,12 @@
                 });
             });
         </script>
-    </form>
+    </form>    
+    <div id="plotly-output">
+        {% if plot_html %}
+            {{ plot_html | safe }}
+        {% endif %}
+    </div>
 </body>
 
 <script>

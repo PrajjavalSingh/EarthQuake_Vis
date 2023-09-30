@@ -10,13 +10,15 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Point
 import numpy as np
 
+import plotly.express as px
+
 
 #starttime and endtime format yyyy-mm-dd
 class DataFetcherAndPresenter:
     def __init__(self, starttime, endtime, minmag, maxmag ):
         self.starttime = starttime
         self.endtime = endtime
-        self.minmag= minmag
+        self.minmag = minmag
         self.maxmag = maxmag
 
     @staticmethod
@@ -93,33 +95,37 @@ class DataFetcherAndPresenter:
         self.conn.close()
 
     def displayOnWorldMap(self,coordinates,colidxs):
-        world = gpd.read_file( gpd.datasets.get_path('naturalearth_lowres') )
-        ax = world.plot( figsize=(12,5), color=DataFetcherAndPresenter.getColor(102,205,0), edgecolor=DataFetcherAndPresenter.getColor(50,100,120) ) 
-        ax.set_facecolor( DataFetcherAndPresenter.getColor(0,139,139) )
+        coordinate_lists = []
         col_list = DataFetcherAndPresenter.colorList()
-        idx = 0
+        idx = -1
+        custom_color_scale = []
         for coords in coordinates:
-            geometry = [Point(lon,lat) for lon,lat in coords]
-            # Create a GeoDataFrame from the points
-            gdf = gpd.GeoDataFrame( geometry, columns=['geometry'] , crs="EPSG:4326" )
-            color = col_list[colidxs[idx]]
-            gdf.plot( ax=ax, marker='^', color=color, markersize=5 )
-            idx += 1
+            idx = idx + 1
+            col = col_list[colidxs[idx]]
+            custom_color_scale.append( col )
+            for lon, lat in coords:
+                coordinate_lists.append({'Latitude': lat, 'Longitude': lon, 'Color': col})
+                
 
-        # Show the plot     
-        plt.show()
+        df = pd.concat([pd.DataFrame(data,index=[0]) for data in coordinate_lists])
 
-nr_args = len(sys.argv)
-if nr_args < 2:
-    root = tkinter.Tk()
-    root.withdraw()
-    messagebox.showerror("Error","Insufficient number of arguments, expected start and end date")
-else:
-    startdate = sys.argv[1]
-    enddate = sys.argv[2]
-    minmag = sys.argv[3]
-    maxmag = sys.argv[4]
-    earthquakedata = DataFetcherAndPresenter(startdate,enddate,minmag,maxmag)
-    earthquakedata.fetchdata()
-    coordinates, colidxs = earthquakedata.getLatLongCoordinatesAndValidMags()
-    earthquakedata.displayOnWorldMap( coordinates, colidxs )
+        fig = px.scatter_geo(df,
+                            lat='Latitude',
+                            lon='Longitude',
+                            color='Color',
+                            title=f'Earthquakes between {self.starttime} - {self.endtime}',
+                            scope='world',
+                            projection='natural earth',
+                            color_discrete_sequence=custom_color_scale
+                            )
+
+        fig.update_geos(
+            showcoastlines=True,
+            coastlinecolor="Black",
+            showland=True,
+            landcolor="white",
+            showocean=True,
+            oceancolor="LightBlue"
+        )
+
+        return fig.to_html( full_html=False )

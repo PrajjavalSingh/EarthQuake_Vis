@@ -1,26 +1,24 @@
 from flask import Flask, request, render_template, jsonify
 import subprocess
+import earthquake_Reader_Presenter as erp
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template( 'index.html' )
 
 @app.route('/earthquake_data_gatherer', methods=['POST'])
 def earthquake_data_gatherer():
-    arg1 = request.form['start_date']
-    arg2 = request.form['end_date']
-    arg3 = request.form['min_mag']
-    arg4 = request.form['max_mag']
-    command = [ 'python', 'earthquake_Reader_Presenter.py', arg1, arg2, arg3, arg4 ]
-    try:
-        result = subprocess.run( command, stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, text=True )
-        return jsonify(result=result)
-    except subprocess.CalledProcessError as e:
-        print( "Subprocess error : ", e )
-        return
+    startdate = request.form['start_date']
+    enddate = request.form['end_date']
+    minmag = request.form['min_mag']
+    maxmag = request.form['max_mag']
+    earthquakedata = erp.DataFetcherAndPresenter(startdate,enddate,minmag,maxmag)
+    earthquakedata.fetchdata()
+    coordinates, colidxs = earthquakedata.getLatLongCoordinatesAndValidMags()
+    fig_html = earthquakedata.displayOnWorldMap( coordinates, colidxs )
+    return render_template( 'index.html', plot_html=fig_html )
 
 if  __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
