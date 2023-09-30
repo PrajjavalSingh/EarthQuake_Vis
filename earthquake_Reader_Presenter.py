@@ -95,37 +95,55 @@ class DataFetcherAndPresenter:
         self.conn.close()
 
     def displayOnWorldMap(self,coordinates,colidxs):
-        coordinate_lists = []
         col_list = DataFetcherAndPresenter.colorList()
         idx = -1
         custom_color_scale = []
+        legends = []
+        col_leg_map = {}
+        coordinate_lists = []
         for coords in coordinates:
             idx = idx + 1
-            col = col_list[colidxs[idx]]
+            magnitude_idx = colidxs[idx]
+            col = col_list[magnitude_idx]
+            key = f'Magnitude : {magnitude_idx}'
             custom_color_scale.append( col )
+            col_leg_map[col] = key
             for lon, lat in coords:
-                coordinate_lists.append({'Latitude': lat, 'Longitude': lon, 'Color': col})
+                coordinate_lists.append({'Latitude': lat, 'Longitude': lon, 'Color' : col, 'Magnitude': magnitude_idx })
+                legends.append( key )
                 
 
         df = pd.concat([pd.DataFrame(data,index=[0]) for data in coordinate_lists])
 
         fig = px.scatter_geo(df,
-                            lat='Latitude',
-                            lon='Longitude',
-                            color='Color',
-                            title=f'Earthquakes between {self.starttime} - {self.endtime}',
-                            scope='world',
-                            projection='natural earth',
-                            color_discrete_sequence=custom_color_scale
+                            lat = 'Latitude',
+                            lon = 'Longitude',
+                            color = 'Color',
+                            title = f'Earthquakes between {self.starttime} - {self.endtime}',
+                            scope = 'world',
+                            projection ='natural earth',
+                            color_discrete_sequence=custom_color_scale,
+                            hover_name = legends,
+                            width = 1500,
+                            height = 750,
+                            hover_data = { 'Color' : False }
                             )
-
+        
+        fig.update_layout(
+                legend_title_text='Magnitude',
+                showlegend=True,
+                legend_traceorder='normal',
+            )
+        
+        fig.for_each_trace(lambda trace: trace.update(name=col_leg_map.get(trace.name, trace.name)))
+        
         fig.update_geos(
             showcoastlines=True,
-            coastlinecolor="Black",
+            coastlinecolor='rgb(50,100,120)',
             showland=True,
-            landcolor="white",
+            landcolor='rgb(102,205,0)',
             showocean=True,
-            oceancolor="LightBlue"
+            oceancolor='rgb(0,139,139)'
         )
 
         return fig.to_html( full_html=False )
